@@ -1,0 +1,22 @@
+-------------------------------------------------------------------
+Fri Jan 26 18:15:12 UTC 2024 - Ilya Stolyarov <ila.embsys@gmail.com>
+
+- Add patches from nreal's dev git branch 
+
+-------------------------------------------------------------------
+Sun Jan 14 09:46:22 UTC 2024 - Ilya Stolyarov <ila.embsys@gmail.com>
+
+- Add Arch's PKGBUILD 
+
+-------------------------------------------------------------------
+Fri Jan  5 22:44:04 UTC 2024 - Ilya Stolyarov <ila.embsys@gmail.com>
+
+- Add service file
+- Use master git version
+- Add patch that add Nreal Air driver
+
+-------------------------------------------------------------------
+Sun Jun 19 22:28:33 UTC 2022 - Sasi Olin <hel@lcp.world>
+
+- Initial release
+

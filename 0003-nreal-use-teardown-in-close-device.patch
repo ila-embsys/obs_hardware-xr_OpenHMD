@@ -1,0 +1,37 @@
+From b8cd837660624d99ed162499ca07dd2b91d68830 Mon Sep 17 00:00:00 2001
+From: ila <ila.embsys@gmail.com>
+Date: Sun, 21 Jan 2024 18:26:58 +0400
+Subject: [PATCH 3/4] nreal: use teardown in close device
+
+---
+ src/drv_nreal/air.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/src/drv_nreal/air.c b/src/drv_nreal/air.c
+index 860ff60..886146a 100644
+--- a/src/drv_nreal/air.c
++++ b/src/drv_nreal/air.c
+@@ -999,7 +999,7 @@ na_hmd_update_inputs(struct ohmd_device *xdev)
+ static void
+ na_hmd_destroy(struct ohmd_device *xdev)
+ {
+-	struct na_hmd *hmd = na_hmd(xdev);
++	struct na_hmd *hmd = (struct na_hmd*)xdev;
+ 	teardown(hmd);
+ 
+ 	free(&hmd->base);
+@@ -1136,7 +1136,10 @@ static int getf(ohmd_device* device, ohmd_float_value type, float* out)
+ static void close_device(ohmd_device* device)
+ {
+ 	LOGD("closing Nreal Air device");
+-	free(device);
++	struct na_hmd *hmd = (struct na_hmd*)device;
++	teardown(hmd);
++
++	free(&hmd->base);
+ }
+ 
+ static hid_device* open_device_idx(int manufacturer, int product, int iface, int device_index)
+-- 
+2.43.0
+

@@ -1,0 +1,53 @@
+From 911a6100e1136d02f4751847bcf68c8a78371534 Mon Sep 17 00:00:00 2001
+From: ila <ila.embsys@gmail.com>
+Date: Sun, 21 Jan 2024 19:26:11 +0400
+Subject: [PATCH 4/4] nreal: cleanup semantic and mutex init
+
+- reorder inits to follow cleanup semantic
+- add forgotten mutex init
+---
+ src/drv_nreal/air.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/drv_nreal/air.c b/src/drv_nreal/air.c
+index 886146a..ebe0b4d 100644
+--- a/src/drv_nreal/air.c
++++ b/src/drv_nreal/air.c
+@@ -922,7 +922,10 @@ teardown(struct na_hmd *hmd)
+ 		hmd->hid_sensor = NULL;
+ 	}
+ 
+-	ohmd_destroy_thread(hmd->oth);
++	// Teardown could happen before thread init, so check it initialized.
++	if (hmd->oth) {
++		ohmd_destroy_thread(hmd->oth);
++	}
+ 	ohmd_destroy_mutex(hmd->thread_mutex);
+ 	ohmd_destroy_mutex(hmd->device_mutex);
+ }
+@@ -1036,8 +1039,9 @@ na_hmd_create_device(
+ 	hmd->wants.display_mode = 0x00;
+ 
+ 
+-	// Do mutex and thread init before any call to teardown happens.
++	// Do mutex init before any call to teardown happens.
+ 	hmd->device_mutex = ohmd_create_mutex(hmd->base.ctx);
++	hmd->thread_mutex = ohmd_create_mutex(hmd->base.ctx);
+ 
+ 	if (!sensor_device) {
+ 		goto cleanup;
+@@ -1057,8 +1061,10 @@ na_hmd_create_device(
+ 	// Empty the queue
+ 	control_clear_queue(hmd);
+ 
+-	hmd->oth = ohmd_create_thread(hmd->base.ctx, read_thread, (void *)hmd);
++	// Thread init and start
+ 	hmd->thread_running = true;
++	hmd->oth = ohmd_create_thread(hmd->base.ctx, read_thread, (void *)hmd);
++
+ 	if (hmd->oth == 0) {
+ 		goto cleanup;
+ 	}
+-- 
+2.43.0
+

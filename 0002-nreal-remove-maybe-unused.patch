@@ -1,0 +1,25 @@
+From 05b50edd44a3a4de40ae180e987f2745026a7f61 Mon Sep 17 00:00:00 2001
+From: ila <ila.embsys@gmail.com>
+Date: Thu, 4 Jan 2024 03:28:35 +0400
+Subject: [PATCH 2/4] nreal: remove [[maybe unused]]
+
+---
+ src/drv_nreal/packet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/drv_nreal/packet.c b/src/drv_nreal/packet.c
+index 3491170..d566402 100644
+--- a/src/drv_nreal/packet.c
++++ b/src/drv_nreal/packet.c
+@@ -97,7 +97,7 @@ read_u16(const uint8_t **buffer, uint16_t *out_value)
+ 	*buffer += 2;
+ }
+ 
+-[[maybe_unused]] static inline void
++static inline void
+ read_u32(const uint8_t **buffer, uint32_t *out_value)
+ {
+ 	*out_value = (*(*buffer + 0) << 0u) |  // Byte 0
+-- 
+2.43.0
+
